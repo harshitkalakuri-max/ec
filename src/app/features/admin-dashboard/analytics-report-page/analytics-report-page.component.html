@@ -1,0 +1,168 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-center mb-4">Analytics Report</h2>
+
+      <nav class="nav nav-pills nav-fill mb-4">
+        <a class="nav-link" routerLink="/admin/products" routerLinkActive="active">
+          <i class="fas fa-box me-2"></i>Products
+        </a>
+        <a class="nav-link" routerLink="/admin/analytics" routerLinkActive="active">
+          <i class="fas fa-chart-line me-2"></i>Analytics
+        </a>
+      </nav>
+
+      <div class="row">
+        <!-- Sales Rate Card with Graph -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-chart-line me-2"></i>Sales Rate
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <canvas id="salesChart" width="100" height="80"></canvas>
+              </div>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Total Sales:</strong> $125,430
+                </div>
+                <div class="col-12">
+                  <strong>Growth:</strong>
+                  <span class="badge bg-success">+15% this month</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Graph Card -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-info text-white">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-dollar-sign me-2"></i>Revenue Graph
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <canvas id="revenueChart" width="100" height="80"></canvas>
+              </div>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Monthly Revenue:</strong> $45,230
+                </div>
+                <div class="col-12">
+                  <strong>Trend:</strong>
+                  <span class="badge bg-success">Increasing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Performance Card with Graph -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-star me-2"></i>Product Performance
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <canvas id="productChart" width="100" height="80"></canvas>
+              </div>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Top Product:</strong> Wireless Headphones
+                </div>
+                <div class="col-12">
+                  <strong>Sales:</strong> 1,250 units
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Engagement Card with Graph -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-secondary text-white">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-users me-2"></i>User Engagement
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <canvas id="userChart" width="100" height="80"></canvas>
+              </div>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Active Users:</strong> 5,430
+                </div>
+                <div class="col-12">
+                  <strong>Conversion Rate:</strong> 12.5%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Trends Card with Graph -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-success text-white">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-shopping-cart me-2"></i>Order Trends
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <canvas id="orderChart" width="100" height="80"></canvas>
+              </div>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Orders This Month:</strong> 890
+                </div>
+                <div class="col-12">
+                  <strong>Average Order Value:</strong> $142
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inventory Status Card with Graph -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-danger text-white">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-warehouse me-2"></i>Inventory Status
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <canvas id="inventoryChart" width="100" height="80"></canvas>
+              </div>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Low Stock Items:</strong>
+                  <span class="badge bg-warning text-dark">23</span>
+                </div>
+                <div class="col-12">
+                  <strong>Out of Stock:</strong>
+                  <span class="badge bg-danger">5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

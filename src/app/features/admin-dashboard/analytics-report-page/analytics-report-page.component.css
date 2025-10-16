@@ -1,0 +1,33 @@
+/* Custom styles for analytics page */
+.card {
+  border: none;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 0.85em;
+}
+
+.nav-pills .nav-link {
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.nav-pills .nav-link:not(.active):hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}

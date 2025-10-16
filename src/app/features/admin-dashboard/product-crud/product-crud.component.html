@@ -1,0 +1,283 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-center mb-4">
+        <i class="fas fa-cogs me-2"></i>Product Management
+      </h2>
+
+      <nav class="nav nav-pills nav-fill mb-4">
+        <a class="nav-link" [class.active]="activeTab === 'products'" (click)="setActiveTab('products')">
+          <i class="fas fa-box me-2"></i>Products
+        </a>
+        <a class="nav-link" [class.active]="activeTab === 'add'" (click)="setActiveTab('add')">
+          <i class="fas fa-plus-circle me-2"></i>Add New
+        </a>
+        <a class="nav-link" [class.active]="activeTab === 'update'" (click)="setActiveTab('update')">
+          <i class="fas fa-edit me-2"></i>Update
+        </a>
+        <a class="nav-link" [class.active]="activeTab === 'delete'" (click)="setActiveTab('delete')">
+          <i class="fas fa-trash me-2"></i>Delete
+        </a>
+        <a class="nav-link" routerLink="/admin/analytics" routerLinkActive="active">
+          <i class="fas fa-chart-line me-2"></i>Analytics
+        </a>
+      </nav>
+
+      <!-- Search and Sort Controls -->
+      <div class="row mb-4" *ngIf="activeTab !== 'add'">
+        <div class="col-md-8">
+          <div class="input-group shadow-sm">
+            <span class="input-group-text bg-primary text-white">
+              <i class="fas fa-search"></i>
+            </span>
+            <input type="text" class="form-control form-control-lg" placeholder="Search products by name, description..." [(ngModel)]="searchTerm" (input)="onSearchInput()">
+            <button class="btn btn-primary" type="button" (click)="onSearch()">
+              <i class="fas fa-search me-1"></i>Search
+            </button>
+          </div>
+          <small class="text-muted mt-1 d-block" *ngIf="searchTerm">
+            <i class="fas fa-info-circle me-1"></i>Searching for: "{{ searchTerm }}"
+          </small>
+        </div>
+        <div class="col-md-4">
+          <select class="form-select form-select-lg shadow-sm" [(ngModel)]="selectedSort" (change)="onSortChange()">
+            <option value="">Sort by...</option>
+            <option value="price_asc">💰 Price: Low to High</option>
+            <option value="price_desc">💰 Price: High to Low</option>
+            <option value="created_at_desc">🕒 Latest</option>
+            <option value="name_asc">🔤 Name: A to Z</option>
+            <option value="name_desc">🔤 Name: Z to A</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Dynamic Content Based on Active Tab -->
+        <div class="col-12">
+          <!-- Products Tab -->
+          <div *ngIf="activeTab === 'products'">
+            <div class="card shadow-sm">
+              <div class="card-header bg-secondary text-white">
+                <h5 class="card-title mb-0">
+                  <i class="fas fa-list me-2"></i>Product List
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row" *ngIf="products.length > 0; else noProducts">
+                    <div class="col-md-6 col-lg-4 mb-3" *ngFor="let product of products">
+                    <div class="card h-100 border-0 shadow-sm">
+                      <img [src]="product.image_url" [alt]="product.name" class="card-img-top" style="height: 150px; object-fit: cover;">
+                      <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text text-muted small">{{ product.description | slice:0:80 }}...</p>
+                        <div class="mt-auto">
+                          <p class="mb-1"><strong>Price:</strong> ${{ product.price }}</p>
+                          <p class="mb-1"><strong>Quantity:</strong> {{ product.quantity }}</p>
+                          <p class="mb-2">
+                            <span class="badge" [ngClass]="product.is_active ? 'bg-success' : 'bg-warning'">
+                              {{ product.is_active ? 'Active' : 'Draft' }}
+                            </span>
+                          </p>
+                          <div class="btn-group w-100" role="group">
+                            <button class="btn btn-outline-primary btn-sm" (click)="onEditProduct(product)">
+                              <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" (click)="onDeleteProduct(product.id)">
+                              <i class="fas fa-trash"></i> Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noProducts>
+                  <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Products Found</h5>
+                    <p class="text-muted">Add your first product using the Add New tab.</p>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add New Tab -->
+          <div *ngIf="activeTab === 'add'">
+            <div class="card shadow-sm">
+              <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                  <i class="fas fa-plus-circle me-2"></i>Add New Product
+                </h5>
+              </div>
+              <div class="card-body">
+                <form (ngSubmit)="onAddProduct($event)">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="name" class="form-label">Product Name</label>
+                      <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="category_id" class="form-label">Category ID</label>
+                      <input type="number" class="form-control" id="category_id" name="category_id" required>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="price" class="form-label">Price ($)</label>
+                      <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="quantity" class="form-label">Quantity</label>
+                      <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="image_url" class="form-label">Image URL</label>
+                    <input type="url" class="form-control" id="image_url" name="image_url" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Add Product
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Update Tab -->
+          <div *ngIf="activeTab === 'update'">
+            <div class="card shadow-sm">
+              <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                  <i class="fas fa-edit me-2"></i>Update Product
+                </h5>
+              </div>
+              <div class="card-body">
+                <div *ngIf="!selectedProduct; else updateForm">
+                  <div class="row" *ngIf="products.length > 0; else noProductsUpdate">
+                    <div class="col-md-6 col-lg-4 mb-3" *ngFor="let product of products">
+                      <div class="card h-100 border-0 shadow-sm">
+                        <img [src]="product.image_url" [alt]="product.name" class="card-img-top" style="height: 150px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                          <h6 class="card-title">{{ product.name }}</h6>
+                          <p class="card-text text-muted small">{{ product.description | slice:0:80 }}...</p>
+                          <div class="mt-auto">
+                            <p class="mb-1"><strong>Price:</strong> ${{ product.price }}</p>
+                            <p class="mb-1"><strong>Quantity:</strong> {{ product.quantity }}</p>
+                            <p class="mb-2">
+                              <span class="badge" [ngClass]="product.is_active ? 'bg-success' : 'bg-warning'">
+                                {{ product.is_active ? 'Active' : 'Draft' }}
+                              </span>
+                            </p>
+                            <button class="btn btn-outline-warning btn-sm w-100" (click)="onEditProduct(product)">
+                              <i class="fas fa-edit"></i> Edit
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #noProductsUpdate>
+                    <div class="text-center py-5">
+                      <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                      <h5 class="text-muted">No Products Available</h5>
+                      <p class="text-muted">Add products first to update them.</p>
+                    </div>
+                  </ng-template>
+                </div>
+                <ng-template #updateForm>
+                  <form (ngSubmit)="onUpdateProduct($event)">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="update-name" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="update-name" name="name" [value]="selectedProduct?.name" required>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="update-description" class="form-label">Description</label>
+                      <textarea class="form-control" id="update-description" name="description" rows="3" [value]="selectedProduct?.description" required></textarea>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="update-price" class="form-label">Price ($)</label>
+                        <input type="number" class="form-control" id="update-price" name="price" step="0.01" [value]="selectedProduct?.price" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="update-quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="update-quantity" name="quantity" [value]="selectedProduct?.quantity" required>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="update-image_url" class="form-label">Image URL</label>
+                        <input type="url" class="form-control" id="update-image_url" name="image_url" [value]="selectedProduct?.image_url" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="update-category_id" class="form-label">Category ID</label>
+                        <input type="number" class="form-control" id="update-category_id" name="category_id" [value]="selectedProduct?.category_id" required>
+                      </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Update Product
+                      </button>
+                      <button type="button" class="btn btn-secondary" (click)="cancelUpdate()">
+                        <i class="fas fa-times me-2"></i>Cancel
+                      </button>
+                    </div>
+                  </form>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delete Tab -->
+          <div *ngIf="activeTab === 'delete'">
+            <div class="card shadow-sm">
+              <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">
+                  <i class="fas fa-trash me-2"></i>Delete Product
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="alert alert-warning">
+                  <i class="fas fa-exclamation-triangle me-2"></i>
+                  <strong>Warning:</strong> Deleting a product cannot be undone. Please be careful.
+                </div>
+                <div class="row" *ngIf="products.length > 0; else noProductsDelete">
+                  <div class="col-md-6 col-lg-4 mb-3" *ngFor="let product of products">
+                    <div class="card h-100 border-0 shadow-sm border-danger">
+                      <img [src]="product.image_url" [alt]="product.name" class="card-img-top" style="height: 120px; object-fit: cover;">
+                      <div class="card-body d-flex flex-column">
+                        <h6 class="card-title text-danger">{{ product.name }}</h6>
+                        <p class="card-text text-muted small">{{ product.description | slice:0:50 }}...</p>
+                        <div class="mt-auto">
+                          <button class="btn btn-danger btn-sm w-100" (click)="onDeleteProduct(product.id)">
+                            <i class="fas fa-trash me-2"></i>Delete Product
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noProductsDelete>
+                  <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Products Available</h5>
+                    <p class="text-muted">There are no products to delete.</p>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
